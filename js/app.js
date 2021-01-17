@@ -114,27 +114,15 @@ class Player extends Character {
     }
 }
 
-
-document.addEventListener('keyup', event => {
+document.addEventListener('keyup', e => {
     const allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
+        "ArrowLeft": 'left',
+        "ArrowUp": 'up',
+        "ArrowRight": 'right',
+        "ArrowDown": 'down'
     };
-    var code = event.keyCode;
-    // if (event.key !== undefined) {
-    //     code = event.key;
-    //   } else if (event.keyIdentifier !== undefined) {
-    //     code = event.keyIdentifier;
-    //   } else if (event.keyCode !== undefined) {
-    //     code = event.keyCode;
-    //   }
-
-    player.handleInput(allowedKeys[code]);
-    console.log(code);
+    player.handleInput(allowedKeys[e.key]);
 });
 
 const player = new Player(playerStartValue.x, playerStartValue.y, playerStartValue.icon);
 const allEnemies = enemyStartValue.initialYcoordinates.map(y => new Enemy(enemyStartValue.x, y, enemyStartValue.icon, player));
-//const allEnemies = enemyStartValue.initialYcoordinates.map(y => new Enemy(enemyStartValue.x, y, enemyStartValue.icon, new Player(playerStartValue.x, playerStartValue.y, playerStartValue.icon)));
