@@ -52,14 +52,14 @@ class Enemy extends Character {
             this.x = enemyStartValue.minX;
             this.speed = this.getRandomSpeed();
         }
-        this.isCollision();
+        this.collisionHappened();
     }
 
-    isCollision() {
+    collisionHappened() {
         if(player.x < this.x + coordsGameGround.conflictX && player.x + coordsGameGround.conflictX > this.x && player.y < this.y + coordsGameGround.conflictY && coordsGameGround.conflictY + player.y > this.y) {
             player.x = playerStartValue.x;
             player.y = playerStartValue.y;
-            this.player.minusScore();
+            player.decreaseScore();
         }
     }
 
@@ -75,7 +75,7 @@ class Player extends Character {
     }
 
     update(dt) {
-       this.prizePoint();
+       this.takingScorePoint();
     }
 
     handleInput(keyPress) {
@@ -96,17 +96,17 @@ class Player extends Character {
         }
     }
 
-    plusScore() {
+    increaseScore() {
         this.score++;
     }
 
-    minusScore() {
+    decreaseScore() {
         this.score <= playerStartValue.startScore ? this.score = playerStartValue.startScore : this.score--;
     }
 
-    prizePoint() {
+    takingScorePoint() {
         if(this.y <= coordsGameGround.min) {
-            this.plusScore();
+            this.increaseScore();
             this.x = playerStartValue.x;
             this.y = playerStartValue.y;
         }
