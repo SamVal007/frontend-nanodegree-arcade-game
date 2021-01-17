@@ -12,9 +12,7 @@ const enemyStartValue = {
     "icon": "images/enemy-bug.png",
     "minX": -50,
     "maxX": 510,
-    "firstEnemy": 63,
-    "secondEnemy": 147,
-    "thirdEnemy": 230
+    "initialYcoordinates": [63, 147, 230]
 };
 
 const coordsGameGround = {
@@ -48,7 +46,7 @@ class Enemy extends Character {
 
     update(dt) {
         this.x += this.speed * dt;
-        if(this.x > enemyStartValue.maxX) {
+        if (this.x > enemyStartValue.maxX) {
             this.x = enemyStartValue.minX;
             this.speed = this.getRandomSpeed();
         }
@@ -56,10 +54,10 @@ class Enemy extends Character {
     }
 
     collisionHappened() {
-        if(player.x < this.x + coordsGameGround.conflictX && player.x + coordsGameGround.conflictX > this.x && player.y < this.y + coordsGameGround.conflictY && coordsGameGround.conflictY + player.y > this.y) {
-            player.x = playerStartValue.x;
-            player.y = playerStartValue.y;
-            player.decreaseScore();
+        if (this.player.x < this.x + coordsGameGround.conflictX && this.player.x + coordsGameGround.conflictX > this.x && this.player.y < this.y + coordsGameGround.conflictY && coordsGameGround.conflictY + this.player.y > this.y) {
+            this.player.x = playerStartValue.x;
+            this.player.y = playerStartValue.y;
+            this.player.decreaseScore();
         }
     }
 
@@ -75,23 +73,23 @@ class Player extends Character {
     }
 
     update(dt) {
-       this.takingScorePoint();
+        this.takingScorePoint();
     }
 
     handleInput(keyPress) {
-        if(keyPress == 'left' && this.x > coordsGameGround.min) {
+        if (keyPress == 'left' && this.x > coordsGameGround.min) {
             this.x -= playerStartValue.stepX;
         }
 
-        if(keyPress == 'right' && this.x < coordsGameGround.max) {
+        if (keyPress == 'right' && this.x < coordsGameGround.max) {
             this.x += playerStartValue.stepX;
         }
 
-        if(keyPress == 'up' && this.y > coordsGameGround.min) {
+        if (keyPress == 'up' && this.y > coordsGameGround.min) {
             this.y -= playerStartValue.stepY;
         }
 
-        if(keyPress == 'down' && this.y < coordsGameGround.max) {
+        if (keyPress == 'down' && this.y < coordsGameGround.max) {
             this.y += playerStartValue.stepY;
         }
     }
@@ -101,11 +99,14 @@ class Player extends Character {
     }
 
     decreaseScore() {
-        this.score <= playerStartValue.startScore ? this.score = playerStartValue.startScore : this.score--;
+        if (this.score <= playerStartValue.startScore)
+            this.score = playerStartValue.startScore;
+        else
+            this.score--;
     }
 
     takingScorePoint() {
-        if(this.y <= coordsGameGround.min) {
+        if (this.y <= coordsGameGround.min) {
             this.increaseScore();
             this.x = playerStartValue.x;
             this.y = playerStartValue.y;
@@ -113,17 +114,27 @@ class Player extends Character {
     }
 }
 
-document.addEventListener('keyup', e => {
+
+document.addEventListener('keyup', event => {
     const allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down'
     };
+    var code = event.keyCode;
+    // if (event.key !== undefined) {
+    //     code = event.key;
+    //   } else if (event.keyIdentifier !== undefined) {
+    //     code = event.keyIdentifier;
+    //   } else if (event.keyCode !== undefined) {
+    //     code = event.keyCode;
+    //   }
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    player.handleInput(allowedKeys[code]);
+    console.log(code);
 });
 
 const player = new Player(playerStartValue.x, playerStartValue.y, playerStartValue.icon);
-const allEnemies = [enemyStartValue.firstEnemy, enemyStartValue.secondEnemy, enemyStartValue.thirdEnemy].map(y =>  new Enemy(enemyStartValue.x, y, enemyStartValue.icon, player));
-
+const allEnemies = enemyStartValue.initialYcoordinates.map(y => new Enemy(enemyStartValue.x, y, enemyStartValue.icon, player));
+//const allEnemies = enemyStartValue.initialYcoordinates.map(y => new Enemy(enemyStartValue.x, y, enemyStartValue.icon, new Player(playerStartValue.x, playerStartValue.y, playerStartValue.icon)));
